@@ -20,6 +20,22 @@
            align-items: center;            
         }
 
+        .map-box {
+            margin: 0px;
+            overflow: hidden;
+            background-color: lightblue;
+            border-radius: 5px;
+        }
+
+        .site-title {
+            font-size: xx-large;
+        }
+
+        path {
+            fill: lightgreen;
+            stroke: black;
+            stroke-opacity: 0.4;
+        }
         
     </style>
 </head>
@@ -33,12 +49,13 @@
     <p>12121212</p>
     <p>12211212121212</p>
     <div class='app-container'>
-        <h1>Wealth Visualiser</h1>
-        <div class='networth-number'>
-            
+        <h1 class='site-title'>Wealth Visualiser</h1>
+        <div class='map-box'>
+            <svg width="960" height="500"></svg>
         </div>
+        
     </div>
-    <svg width="960" height="500"></svg>
+    
     <script src='./dist/main.js'></script>
     <script src="https://unpkg.com/topojson@3"></script>
 </body>
