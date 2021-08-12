@@ -39,8 +39,11 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "d3": "^7.0.0",
+    "es6-promise": "^4.2.8",
     "geojson": "^0.5.0",
+    "isomorphic-fetch": "^3.0.0",
     "puppeteer": "^10.0.0",
     "resolve-url-loader": "^4.0.0",
     "topojson-client": "^3.1.0"
