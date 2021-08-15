@@ -8,7 +8,7 @@ import {feature} from 'topojson-client'
 import './styles/main.scss';
 import {billData} from '../billionaireData'
 
-console.log('billData',billData)
+let Data = billData
 
 
 // FUNCTION TO SCRAPE WEB AND GET BILLIONAIRE DATA
@@ -49,34 +49,16 @@ d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(d
 			.attr('class', 'country')
 			// .classed(d => d.properties.features, true)
 			.attr('d', pathGenerator)
-			.text(d => console.log(d.properties.name))
+			
 			
 
 		
 
 })
 
-d3.selectAll("p").style("color", function() {
-	return "hsl(" + Math.random() * 360 + ",100%,50%)";
-  });
 
-const country = document.querySelectorAll('.country')
 
-country.addEventListener('click', e => {
-	console.log(e)
-})
 
-const we = document.querySelector('.we')
-
-we.addEventListener('click', e => {
-	console.log(e)
-})
-
-// const g = svg.append('g');
-
-// svg.call(d3.zoom().on('zoom', () => {
-// 	g.attr('transform', d3.event.transform);
-// }))
 
 
 	

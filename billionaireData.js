@@ -1,5 +1,5 @@
 
-export const billData = [
+export let billData = [
     {
         "id": 1,
         "name": "Jeff Bezos",
