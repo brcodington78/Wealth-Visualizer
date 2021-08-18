@@ -36,6 +36,18 @@ export const getIndustries = (data) => {
 }
 
 
+//function takes in an array of objects amd returns a filtered array of objects pertaining to a country
+export const filterByCountry = (data, country) => {
+    let filteredArr = []
+    data.forEach((obj) => {
+        if(country.toLowerCase() === obj.country.toLowerCase()){
+            filteredArr.push(obj)
+        }
+    })
+    return filteredArr
+} 
+
+
 // takes data and sums the netWorth of individuals within the same industry. returns an obj
 export const sortByIndustry = (data) => {
     let industries = getIndustries(data)
