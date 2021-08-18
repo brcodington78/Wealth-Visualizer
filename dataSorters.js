@@ -25,7 +25,7 @@ export const sortByAge = (data, order) => {
 
 //function grabs all the industries available to it from the data provided and returns an array with string values for the industries
 export const getIndustries = (data) => {
-    console.log('data taken in by industry func', data)
+    
     let industries = []
     data.forEach(object => {
         if (!industries.includes(object.industry)) {
@@ -49,6 +49,13 @@ export const sortByIndustry = (data) => {
        let personalIndustry = object.industry;
        industriesObj[personalIndustry] += object.netWorth
     })
+    
 
     return industriesObj
+}
+
+// takes in data in the form of an object and returns an array with individual objects containing the key value pairs
+export const ObjectToArr = (dataObj) => {
+    const objArr = Object.keys(dataObj).map(i => dataObj[i])
+    return objArr
 }
