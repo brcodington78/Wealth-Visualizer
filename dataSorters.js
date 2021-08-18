@@ -35,6 +35,16 @@ export const getIndustries = (data) => {
     return industries
 }
 
+export const getCountries = (data) => {
+    let countries = []
+    data.forEach(object => {
+        if(!countries.includes(object.country)) {
+            countries.push(object.country)
+        }
+    })
+    return countries
+}
+
 
 //function takes in an array of objects amd returns a filtered array of objects pertaining to a country
 export const filterByCountry = (data, country) => {
@@ -66,8 +76,48 @@ export const sortByIndustry = (data) => {
     return industriesObj
 }
 
+export const netWorthByCountry = (data) => {
+    let countries = getCountries(data)
+    let countriesObj = {}
+
+    countries.forEach((country) => {
+        countriesObj[country] = 0
+    })
+
+    data.forEach((object) => {
+        let personalCountry = object.country;
+        console.log('networth', object.netWorth)
+        countriesObj[personalCountry] += object.netWorth
+    })
+
+    return countriesObj
+}
+
 // takes in data in the form of an object and returns an array with individual objects containing the key value pairs
 export const ObjectToArr = (dataObj) => {
-    const objArr = Object.keys(dataObj).map(i => dataObj[i])
+    const objArr = Object.keys(dataObj).map(i => {i: dataObj[i]})
     return objArr
 }
+
+//used to convert industry objects into a better format for d3
+// {'Tech': 1220000000} => {industry: 'Tech', totalWorth: 12200000}
+export const newIndObj = (key, value) => {
+    return ({
+        industry: key,
+        totalWorth: value
+    })
+}
+export const indObjDataFormatter = (dataObj) => {
+    const keys = Object.keys(dataObj) 
+    const values = Object.values(dataObj)
+    let newArr = []
+    
+    for(let i = 0; i < keys.length; i++){
+        let newObj = newIndObj(keys[i], values[i])
+        newArr.push(newObj)
+    }
+    
+    return newArr
+    
+}
+
