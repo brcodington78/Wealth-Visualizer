@@ -249,12 +249,15 @@ const billionaireBubbles = (data) => {
 
 	const svg = d3.select('.billionaire-circle-container')
 				.append('svg')
+				.attr('class', 'billionaire-circle-packing')
 				.attr('width', height)
 				.attr('height', height)
+				.style('background-color', 'lightblue')
+				.style('border-radius', 50 + '%')
 	
 	const color = d3.scaleOrdinal()
 			.domain(allIndustries)
-			.range(d3.schemeSet1);
+			.range(d3.quantize(t => d3.interpolateTurbo(t * 0.8 + 0.1), allIndustries.length).reverse())
 
 	const size = d3.scaleLinear()
 		.domain([0, 190])
