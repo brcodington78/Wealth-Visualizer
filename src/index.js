@@ -293,7 +293,7 @@ const industryBarGraph = (industryData) => {
 	// set the dimensions and margins of the graph
 	const margin = {top: 10, right: 30, bottom: 90, left: 40},
 		width = 460 - margin.left - margin.right,
-		height = 450 - margin.top - margin.bottom;
+		height = 460 - margin.top - margin.bottom;
 
 	// append the svg object to the body of the page
 	const svg = d3.select(".industry-bar-graph")

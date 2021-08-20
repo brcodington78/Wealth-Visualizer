@@ -42,6 +42,31 @@
         .node:hover{
             cursor: pointer
         }
+        .graph-container {
+            display: flex;
+            margin-top: 25px;
+            width: 100%;
+            justify-content: space-evenly;
+        }
+
+        .graph-one {
+            display:flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .billionaire-circle-header {
+            font-family: arial;
+            font-size: x-large;
+            margin-bottom: 20px;
+        }
+
+        .graph-two {
+            display:flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
         
     </style>
 </head>
@@ -59,10 +84,20 @@
         </div>
 
         <!-- <div class='industry-pie-container'></div> -->
+        <div class='graph-container'>
+            <div class='graph-one'>
+                <h1 class='billionaire-circle-header'>Individual Billionaire Wealth</h1>
+                <div class='billionaire-circle-container'></div>
+            </div>
+        
+            <div class= 'graph-two'>
+                <h1 class='industry-graph-header'>Wealth of each Industry</h1>
+                <div class='industry-bar-graph'></div>
+                <p>This graph shows the aggregated billionaire wealth of each industry.</p>
 
-        <div class='billionaire-circle-container'></div>
+            </div>
 
-        <div class='industry-bar-graph'></div>
+        </div>
 
         
 
