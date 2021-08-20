@@ -30,8 +30,13 @@ export const grabBillions = (doc) => {
             industry: element.querySelector('.category').innerText
     
         }
-        
-        billionaireData.push(newPerson)
+        if( newPerson.country === 'United States') {
+            newPerson.country = 'United States of America'
+            billionaireData.push(newPerson)
+        } else {
+            billionaireData.push(newPerson)
+
+        }
         
         
     })
