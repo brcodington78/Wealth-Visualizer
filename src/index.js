@@ -71,175 +71,116 @@ d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(d
 
 
 
-// function makePieChart3() {
-// 	let width = 450;
-// 	let height = 450;
-// 	let margin = 40;
-
-// 	console.log('sortByIndustry', sortByIndustry(billData), sortByIndustry(billData).length)
-// 	let data = sortByIndustry(billData);
-// 	let newData = ObjectToArr(data)
-
-// 	let radius = Math.min(width, height) / 2 - margin;
-
-// 	let svg2 = d3.select('.industry-pie-container')
-// 		.append('svg')
-// 			.attr("width", width)
-// 			.attr('height', height)
-// 		.append("g")
-// 			.attr("transform", `translate(${width/2}, ${height/2})`);
-	
-// 		const color = d3.scaleOrdinal()
-// 			.range( d3.schemePaired)
-
-// 	let pie = d3.pie()
-// 		.value(function(d) {return d[1] })
-	
-// 	let dataReady = pie(Object.entries(data))
-
-// 	const arcGenerator = d3.arc()
-// 		.innerRadius(0)
-// 		.outerRadius(radius)
-
-// 	svg2
-// 		.selectAll('whatever')
-// 		.data(dataReady)
-// 		.join('path')
-// 		.attr('d', arcGenerator
-// 		)
-// 		.attr('fill', function(d){ return(color(d.data[1])) })
-// 		.attr("stroke", "black")
-// 		.style("stroke-width", "2px")
-// 		.style("opacity", 0.7)
-		
-  
-
-// 	svg2
-// 		.selectAll('whatever')
-// 		.data(dataReady)
-// 		.join('text')
-// 		.text(function(d){ return d.data[0]})
-// 		.attr("transform", function(d) { return `translate(${arcGenerator.centroid(d)})`})
-//   		.style("text-anchor", "middle")
-//   		.style("font-size", 10)
-
-
-
-// }
-
-// makePieChart3()
-
-
 //makes a circle packing graph using industry networth data 
 //need to make it more general purpose and able to take in whatever industry networth data
 
-// const makeIndustryBubblesPlz = () => {
-// 	const width = 460;
-// 	const height = 460;
+const makeIndustryBubblesPlz = () => {
+	const width = 460;
+	const height = 460;
 
-// 	const svg2 = d3.select('.industry-pie-container')
-// 		.append('svg')
-// 			.attr('width', width)
-// 			.attr('height', height)
-
-	
-// 	const data = testData2;
-
-// 	let color = d3.scaleOrdinal()
-// 		.domain(allIndustries)
-// 		.range(d3.schemeSet1);
-
-// 	const size = d3.scaleLinear()
-// 		.domain([0,1800])
-// 		.range([7,55])
-
-// 	const Tooltip = d3.select('.industry-pie-container')
-// 		.append('div')
-// 		.style('opacity', 0)
-// 		.attr('class', 'tooltip')
-// 		.style('background-color', 'white')
-// 		.style("border", "solid")
-// 		.style("border-width", "2px")
-// 		.style("border-radius", "5px")
-// 		.style("padding", "5px")
-
-// 	let mouseover = function(event, d) {
-// 		Tooltip
-// 			.style("opacity", 1)
-// 	}
+	const svg2 = d3.select('.industry-pie-container')
+		.append('svg')
+			.attr('width', width)
+			.attr('height', height)
 
 	
-// 	let mousemove = function(event, d) {
-// 		console.log('event', event)
-// 		console.log('mousemove hitting')
-// 		console.log('mousemove d', d)
-// 		const [x, y] = d3.pointer(event);
-// 		Tooltip
-// 		  	.html('<u>' + d.industry + '</u>' + "<br>" + `${d.totalWorth}` + " dollars in billions" )
-// 			.style('position', 'relative')
-// 			.style('z-index', 100)
-// 			.style("left", 230 + "px")
-//       		.style("top", 250 + "px")
-// 		console.log(Tooltip)
-// 	}
+	const data = testData2;
 
-// 	let mouseleave = function(event, d) {
-// 		Tooltip
-// 		  .style("opacity", 0)
-// 	}
+	let color = d3.scaleOrdinal()
+		.domain(allIndustries)
+		.range(d3.schemeSet1);
+
+	const size = d3.scaleLinear()
+		.domain([0,1800])
+		.range([7,55])
+
+	const Tooltip = d3.select('.industry-pie-container')
+		.append('div')
+		.style('opacity', 0)
+		.attr('class', 'tooltip')
+		.style('background-color', 'white')
+		.style("border", "solid")
+		.style("border-width", "2px")
+		.style("border-radius", "5px")
+		.style("padding", "5px")
+
+	let mouseover = function(event, d) {
+		Tooltip
+			.style("opacity", 1)
+	}
+
+	
+	let mousemove = function(event, d) {
+		console.log('event', event)
+		console.log('mousemove hitting')
+		console.log('mousemove d', d)
+		const [x, y] = d3.pointer(event);
+		Tooltip
+		  	.html('<u>' + d.industry + '</u>' + "<br>" + `${d.totalWorth}` + " dollars in billions" )
+			.style('position', 'relative')
+			.style('z-index', 100)
+			.style("left", 230 + "px")
+      		.style("top", 250 + "px")
+		console.log(Tooltip)
+	}
+
+	let mouseleave = function(event, d) {
+		Tooltip
+		  .style("opacity", 0)
+	}
 
 
-// 	let node = svg2.append("g")
-//     .selectAll("circle")
-//     .data(data)
-//     .join("circle")
-//       .attr("class", "node")
-//       .attr("r", d => size(d.totalWorth))
-//       .attr("cx", width / 2)
-//       .attr("cy", height / 2)
-//       .style("fill", d => color(d.industry))
-//       .style("fill-opacity", 0.8)
-//       .attr("stroke", "black")
-//       .style("stroke-width", 1)
-//       .on("mouseover", mouseover) // What to do when hovered
-//       .on("mousemove", mousemove)
-//       .on("mouseleave", mouseleave)
-//       .call(d3.drag() // call specific function when circle is dragged
-//            .on("start", dragstarted)
-//            .on("drag", dragged)
-//            .on("end", dragended));
+	let node = svg2.append("g")
+    .selectAll("circle")
+    .data(data)
+    .join("circle")
+      .attr("class", "node")
+      .attr("r", d => size(d.totalWorth))
+      .attr("cx", width / 2)
+      .attr("cy", height / 2)
+      .style("fill", d => color(d.industry))
+      .style("fill-opacity", 0.8)
+      .attr("stroke", "black")
+      .style("stroke-width", 1)
+      .on("mouseover", mouseover) // What to do when hovered
+      .on("mousemove", mousemove)
+      .on("mouseleave", mouseleave)
+      .call(d3.drag() // call specific function when circle is dragged
+           .on("start", dragstarted)
+           .on("drag", dragged)
+           .on("end", dragended));
 
 
-// 	const simulation = d3.forceSimulation()
-// 	.force("center", d3.forceCenter().x(width / 2).y(height / 2)) // Attraction to the center of the svg area
-// 	.force("charge", d3.forceManyBody().strength(.1)) // Nodes are attracted one each other of value is > 0
-// 	.force("collide", d3.forceCollide().strength(.2).radius(function(d){ return (size(d.totalWorth)+3) }).iterations(1)) // Force that avoids circle overlapping
+	const simulation = d3.forceSimulation()
+	.force("center", d3.forceCenter().x(width / 2).y(height / 2)) // Attraction to the center of the svg area
+	.force("charge", d3.forceManyBody().strength(.1)) // Nodes are attracted one each other of value is > 0
+	.force("collide", d3.forceCollide().strength(.2).radius(function(d){ return (size(d.totalWorth)+3) }).iterations(1)) // Force that avoids circle overlapping
 
-// 	//changed from v4 to v6
-// 	simulation
-//       .nodes(data)
-//       .on("tick", function(d){
-//         node
-//             .attr("cx", d => d.x)
-//             .attr("cy", d => d.y)
-//       });
+	//changed from v4 to v6
+	simulation
+      .nodes(data)
+      .on("tick", function(d){
+        node
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
+      });
 
-// 	  function dragstarted(event, d) {
-// 		if (!event.active) simulation.alphaTarget(.03).restart();
-// 		d.fx = d.x;
-// 		d.fy = d.y;
-// 	  }
-// 	  function dragged(event, d) {
-// 		d.fx = event.x;
-// 		d.fy = event.y;
-// 	  }
-// 	  function dragended(event, d) {
-// 		if (!event.active) simulation.alphaTarget(.03);
-// 		d.fx = null;
-// 		d.fy = null;
-// 	  }
+	  function dragstarted(event, d) {
+		if (!event.active) simulation.alphaTarget(.03).restart();
+		d.fx = d.x;
+		d.fy = d.y;
+	  }
+	  function dragged(event, d) {
+		d.fx = event.x;
+		d.fy = event.y;
+	  }
+	  function dragended(event, d) {
+		if (!event.active) simulation.alphaTarget(.03);
+		d.fx = null;
+		d.fy = null;
+	  }
 
-// }
+}
 
 // makeIndustryBubblesPlz()
 
@@ -280,7 +221,7 @@ const billionaireBubbles = (data) => {
 
 	const mousemove = function(event, d) {
 		Tooltip
-			.html('<u>' + d.name + '</u>' + "<br>" + d.netWorth + " billion dollars" + "<br>" + d.industry + " industry")
+			.html('<u>' + d.name + ' - ' + d.source + '</u>' + "<br>" + d.netWorth + " billion dollars" + "<br>" + d.industry + " industry")
 			.style("left", (event.x/2+20) + "px")
 			.style("top", (event.y/2-30) + "px")
 	}
@@ -343,11 +284,72 @@ const billionaireBubbles = (data) => {
 }
 
 
-
 billionaireBubbles(billData)
 	
+
+
+const industryBarGraph = (industryData) => {
+
+	// set the dimensions and margins of the graph
+	const margin = {top: 10, right: 30, bottom: 90, left: 40},
+		width = 460 - margin.left - margin.right,
+		height = 450 - margin.top - margin.bottom;
+
+	// append the svg object to the body of the page
+	const svg = d3.select(".industry-bar-graph")
+		.append("svg")
+			.attr("width", width + margin.left + margin.right)
+			.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+			.attr("transform", `translate(${margin.left},${margin.top})`);
+
+	// Parse the Data
+	let data = industryData;
+
+	const color = d3.scaleOrdinal()
+			.domain(allIndustries)
+			.range(d3.quantize(t => d3.interpolateTurbo(t * 0.8 + 0.1), allIndustries.length).reverse())
+
+	// X axis
+	const x = d3.scaleBand()
+		.range([ 0, width ])
+		.domain(data.map(d => d.industry))
+		.padding(0.2);
+		svg.append("g")
+		.attr("transform", `translate(0,${height})`)
+		.call(d3.axisBottom(x))
+		.selectAll("text")
+		.attr("transform", "translate(-10,0)rotate(-45)")
+		.style("text-anchor", "end");
+
+	// Add Y axis
+	const y = d3.scaleLinear()
+	.domain([0, 1600])
+	.range([ height, 0]);
+	svg.append("g")
+	.call(d3.axisLeft(y));
+
+	// Bars
+	svg.selectAll("mybar")
+	.data(data)
+	.join("rect")
+	.attr("x", d => x(d.industry))
+	.attr("width", x.bandwidth())
+	.attr("fill",  d => color(d.industry) )
+	// no bar at the beginning thus:
+	.attr("height", d => height - y(0)) // always equal to 0
+	.attr("y", d => y(0))
+
+	// Animation
+	svg.selectAll("rect")
+	.transition()
+	.duration(800)
+	.attr("y", d => y(d.totalWorth))
+	.attr("height", d => height - y(d.totalWorth))
+	.delay((d,i) => {console.log(i); return i*100})
+
 	
+}
 
 
-
-
+industryBarGraph(testData2)

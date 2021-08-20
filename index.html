@@ -39,10 +39,9 @@
             stroke: black;
             stroke-opacity: 0.4;
         }
-        /* .node:hover{
-            stroke-width: 7px !important;
-            opacity: 1 !important;
-        } */
+        .node:hover{
+            cursor: pointer
+        }
         
     </style>
 </head>
@@ -54,15 +53,19 @@
     
     <div class='app-container'>
         <h1 class='site-title'>Wealth Visualiser</h1>
+
         <div class='map-box'>
             <svg width="960" height="500"></svg>
         </div>
-        <div class='industry-pie-container'>
-    
-        </div>
-        <div class='billionaire-circle-container'>
-            
-        </div>
+
+        <!-- <div class='industry-pie-container'></div> -->
+
+        <div class='billionaire-circle-container'></div>
+
+        <div class='industry-bar-graph'></div>
+
+        
+
         
     </div>
     
