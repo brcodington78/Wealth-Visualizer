@@ -21,7 +21,7 @@ let testData2 = indObjDataFormatter(testData1)
 console.log('billData',billData)
 console.log('industries before conversion', sortByIndustry(billData))
 console.log('testData2', testData2)
-console.log('countries', getCountries(billData))
+
 
 
 
@@ -80,8 +80,21 @@ const setGraph1 = (countryId) => {
 	} else if (countryId === 'China') {
 		alert('could be China or Hong Kong')
 	} else {
-		alert(`${countryId}`)
-	}
+		let circleEle = document.getElementsByClassName('billionaire-circle-packing')
+		let toolTip = document.getElementsByClassName('tooltip')
+		let data = filterByCountry(billData, countryId)
+		console.log('tooltip', circleEle)
+		if(circleEle.length !== 0) {
+			circleEle[0].parentNode.removeChild(circleEle[0])
+			toolTip[0].parentNode.removeChild(toolTip[0])
+			billionaireBubbles(data)
+
+			
+		} else {
+
+			billionaireBubbles(data)
+		}
+	}	
 }
 
 
@@ -109,7 +122,7 @@ const billionaireBubbles = (data) => {
 
 	const size = d3.scaleLinear()
 		.domain([0, 190])
-		.range([1,50]) 
+		.range([10,60]) 
 
 	const Tooltip = d3.select(".billionaire-circle-container")
 		.append("div")
@@ -190,8 +203,9 @@ const billionaireBubbles = (data) => {
 	   }
 }
 
+// billionaireBubbles(billData)
 
-billionaireBubbles(billData)
+
 	
 
 //function creates a bar graph showing the aggregated wealth of billionaires for each major industry
