@@ -60,7 +60,7 @@ d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(d
 	const countries = feature(data, data.objects.countries);
 	// console.log('countries',countries)
 
-
+	console.log(data)
 	svg.selectAll('path')
 		.data(countries.features)
 		.enter().append('path')
@@ -72,6 +72,8 @@ d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(d
 				setGraph1(countryId)
 				setGraph2(countryId)
 			})
+			.append('title')
+			.text(d => d.properties.name)
 			
 })
 
@@ -273,6 +275,8 @@ const industryBarGraph = (industryData) => {
 	// no bar at the beginning thus:
 	.attr("height", d => height - y(0)) // always equal to 0
 	.attr("y", d => y(0))
+	.append('title')
+	.text(d => d.totalWorth)
 
 	// Animation
 	svg.selectAll("rect")
@@ -281,6 +285,7 @@ const industryBarGraph = (industryData) => {
 	.attr("y", d => y(d.totalWorth))
 	.attr("height", d => height - y(d.totalWorth))
 	.delay((d,i) => {console.log(i); return i*100})
+	
 
 	
 }
