@@ -75,27 +75,33 @@ d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(d
 })
 
 const setGraph1 = (countryId) => {
+	let data = []
 	if (countryId === 'Malaysia') {
-		alert('could be malaysia or Singapore')
+		data = filterByCountry(billData, countryId).concat(filterByCountry(billData, 'Singapore'))
+		console.log('malaysia', data)
 	} else if (countryId === 'China') {
-		alert('could be China or Hong Kong')
+		data = filterByCountry(billData, countryId).concat(filterByCountry(billData, 'Hong Kong'))
 	} else {
-		let circleEle = document.getElementsByClassName('billionaire-circle-packing')
-		let toolTip = document.getElementsByClassName('tooltip')
-		let data = filterByCountry(billData, countryId)
-		console.log('tooltip', circleEle)
-		if(circleEle.length !== 0) {
-			circleEle[0].parentNode.removeChild(circleEle[0])
-			toolTip[0].parentNode.removeChild(toolTip[0])
-			billionaireBubbles(data)
-
-			
-		} else {
-
-			billionaireBubbles(data)
-		}
+		data = filterByCountry(billData, countryId)
 	}	
+	let circleEle = document.getElementsByClassName('billionaire-circle-packing')
+	let toolTip = document.getElementsByClassName('tooltip')
+	console.log('tooltip', circleEle)
+	if(circleEle.length !== 0) {
+		circleEle[0].parentNode.removeChild(circleEle[0])
+		toolTip[0].parentNode.removeChild(toolTip[0])
+		billionaireBubbles(data)
+	
+		
+	} else {
+	
+		billionaireBubbles(data)
+	}
 }
+
+// const setGraph2 = (countryId) => {
+
+// }
 
 
 //Graph that returns circle packing graph of billionaire's wealth sizes
