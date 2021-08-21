@@ -35,6 +35,7 @@ export const getIndustries = (data) => {
     return industries
 }
 
+//returns an array with country name strings
 export const getCountries = (data) => {
     let countries = []
     data.forEach(object => {
@@ -121,3 +122,13 @@ export const indObjDataFormatter = (dataObj) => {
     
 }
 
+
+export const maxIndustryWorth = (data) => {
+    let currentMax = 0
+    data.forEach((obj) => {
+        if(obj.totalWorth > currentMax) {
+            currentMax = obj.totalWorth
+        }
+    })
+    return currentMax
+}
