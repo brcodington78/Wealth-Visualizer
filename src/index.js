@@ -54,39 +54,41 @@ const svg = d3.select('svg');
 
 const projection = d3.geoNaturalEarth1();
 const pathGenerator = d3.geoPath().projection(projection);
+const g = svg.append('g')
 
-
-d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(data => {
+d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json').then(data => {
 	const countries = feature(data, data.objects.countries);
-	// console.log('countries',countries)
+	
+	svg.call(d3.zoom().on("zoom", (event) => {
+		g.attr('transform', event.transform)
+	}))
+	
+	
+	g.selectAll('path')
+	.data(countries.features)
+	.enter().append('path')
+	.attr('id', d => d.properties.name)
+	.attr('class', 'country')
+	.attr('d', pathGenerator)
+	.on('click', function(d,i){ 
+		let countryId = this.id
+		setGraph1(countryId)
+		setGraph2(countryId)
+	})
+	.append('title')
+	.text(d => d.properties.name)
 
-	console.log(data)
-	svg.selectAll('path')
-		.data(countries.features)
-		.enter().append('path')
-			.attr('id', d => d.properties.name)
-			.attr('class', 'country')
-			.attr('d', pathGenerator)
-			.on('click', function(d,i){ 
-				let countryId = this.id
-				setGraph1(countryId)
-				setGraph2(countryId)
-			})
-			.append('title')
-			.text(d => d.properties.name)
+	
+	// svg.call(d3.zoom().on('zoom', () => {
+	// 	console.log('svg',svg)
+	// 	svg.attr('transform', d3.event.transform)
+	// }));
 			
 })
 
+
 const setGraph1 = (countryId) => {
-	let data = []
-	if (countryId === 'Malaysia') {
-		data = filterByCountry(billData, countryId).concat(filterByCountry(billData, 'Singapore'))
-		console.log('malaysia', data)
-	} else if (countryId === 'China') {
-		data = filterByCountry(billData, countryId).concat(filterByCountry(billData, 'Hong Kong'))
-	} else {
-		data = filterByCountry(billData, countryId)
-	}	
+	let data = filterByCountry(billData, countryId)	
 	let circleEle = document.getElementsByClassName('billionaire-circle-packing')
 	let toolTip = document.getElementsByClassName('tooltip')
 	console.log('tooltip', circleEle)
@@ -292,21 +294,12 @@ const industryBarGraph = (industryData) => {
 
 const setGraph2 = (countryId) => {
 	let data = []
-	if (countryId === 'Malaysia'){
-		data = filterByCountry(billData, countryId).concat(filterByCountry(billData, 'Singapore'))
-		data = sortByIndustry(data)
-		data = indObjDataFormatter(data)
-
-	} else if(countryId === 'China') {
-		data = filterByCountry(billData, countryId).concat(filterByCountry(billData, 'Hong Kong'))
-		data = sortByIndustry(data)
-		data = indObjDataFormatter(data)
-	} else {
-		data = filterByCountry(billData, countryId)
-		data = sortByIndustry(data)
-		data = indObjDataFormatter(data)
+	
+	data = filterByCountry(billData, countryId)
+	data = sortByIndustry(data)
+	data = indObjDataFormatter(data)
 		
-	}
+
 	let barEle = document.getElementsByClassName('bar-graph-svg')
 	if(barEle.length !== 0) {
 		barEle[0].parentNode.removeChild(barEle[0])
