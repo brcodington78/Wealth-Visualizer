@@ -14,42 +14,15 @@ indObjDataFormatter, maxIndustryWorth} from '../dataSorters';
 
 
 
-let data = billData
-let testData1 = sortByIndustry(billData)
-let testData2 = indObjDataFormatter(testData1)
-
-console.log('billData',billData)
-console.log('industries before conversion', sortByIndustry(billData))
-console.log('testData2', testData2)
-
-
-
 
 //Keep this it is necessary
-const allIndustries = ["Technology", "Automotive", 
-						"Fashion & Retail", "Finance & Investments", 
-						"Diversified", "Food & Beverage", 
-						"Telecom", "Media & Entertainment", 
-						"Service", "Gambling & Casinos", 
-						"Manufacturing", "Real Estate", "Metals & Mining", 
-						"Energy", "Logistics", "Healthcare", 
-						"Construction & Engineering"]
-
-
-// FUNCTION TO SCRAPE WEB AND GET BILLIONAIRE DATA
-// async function getData() {
-// 	const response = await fetch('https://www.forbes.com/billionaires/');
-// 	console.log('response', response)
-// }
-
-// getData()
-
-
+let data = billData
+const allIndustries = getIndustries(billData)
 
 
 //this is how the map is generated
 
-const svg = d3.select('svg');
+const svg = d3.select('.map-svg');
 
 
 const projection = d3.geoNaturalEarth1();
@@ -60,6 +33,7 @@ d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json').then(da
 	const countries = feature(data, data.objects.countries);
 	
 	svg.call(d3.zoom().on("zoom", (event) => {
+		console.log('zoooooooming')
 		g.attr('transform', event.transform)
 	}))
 	
@@ -71,13 +45,15 @@ d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json').then(da
 	.attr('class', 'country')
 	.attr('d', pathGenerator)
 	.on('click', function(d,i){ 
-		let countryId = this.id
-		setGraph1(countryId)
-		setGraph2(countryId)
+		let countryId = this.id;
+		displayCountry(countryId);
+		setGraph1(countryId);
+		setGraph2(countryId);
 	})
 	.append('title')
 	.text(d => d.properties.name)
 
+	console.log('hitting')
 	
 	// svg.call(d3.zoom().on('zoom', () => {
 	// 	console.log('svg',svg)
@@ -86,6 +62,21 @@ d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json').then(da
 			
 })
 
+// const displayCountry = (countryId) => {
+// 	console.log('hitting')
+// 	let header = document.getElementsByClassName('country-title');
+// 	console.log('header', header)
+// 	header.innerText = countryId
+// 	console.log(header.innerText)
+// }
+
+
+const displayCountry = (countryId) => {
+	console.log('hitting')
+	let h1 = document.createElement('div');
+	h1.textContent = countryId
+	h1.append('.country-title')
+}
 
 const setGraph1 = (countryId) => {
 	let data = filterByCountry(billData, countryId)	
@@ -161,6 +152,7 @@ const billionaireBubbles = (data) => {
 	}
 
 	let node = svg.append("g")
+	.attr('class', 'graph1-g')
     .selectAll("circle")
     .data(data)
     .join("circle")
@@ -185,6 +177,10 @@ const billionaireBubbles = (data) => {
 		   .force("charge", d3.forceManyBody().strength(.1)) // Nodes are attracted one each other of value is > 0
 		   .force("collide", d3.forceCollide().strength(.2).radius(function(d){ return (size(d.netWorth)+3) }).iterations(1)) // Force that avoids circle overlapping
 	 
+
+		svg.call(d3.zoom().on("zoom", (event) => {
+			node.attr('transform', event.transform)
+		}))
 	   // Apply these forces to the nodes and update their positions.
 	   // Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
 	   simulation
@@ -210,6 +206,8 @@ const billionaireBubbles = (data) => {
 		 d.fx = null;
 		 d.fy = null;
 	   }
+
+	   
 }
 
 // billionaireBubbles(billData)

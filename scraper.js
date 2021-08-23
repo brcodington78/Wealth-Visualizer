@@ -21,7 +21,7 @@ export const grabBillions = (doc) => {
 
     doc.querySelectorAll('.table-row').forEach(element => {
         let newPerson = {
-            id: parseInt(element.querySelector('.rank').innerText.slice(0, element.querySelector('.rank').innerText.length - 1)),
+            rank: parseInt(element.querySelector('.rank').innerText.slice(0, element.querySelector('.rank').innerText.length - 1)),
             name: (element.querySelector('.personName').innerText),
             country: (element.querySelector('.countryOfCitizenship').innerText),
             netWorth: parseFloat((element.querySelector('.netWorth').innerText.match(/[+-]?\d+(\.\d+)?/g))[0]),
