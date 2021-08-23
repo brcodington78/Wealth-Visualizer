@@ -128,11 +128,12 @@ const billionaireBubbles = (data) => {
 		.append("div")
 		.style("opacity", 0)
 		.attr("class", "tooltip")
-		.style("background-color", "white")
-		.style("border", "solid")
+		.style("background-color", "lightblue")
+		.style("border", "none")
 		.style("border-width", "2px")
 		.style("border-radius", "5px")
-		.style("padding", "5px")
+		.style("padding", "10px")
+		
 	
 	const mouseover = function(event, d) {
 		Tooltip
