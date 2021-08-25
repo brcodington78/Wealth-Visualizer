@@ -14,79 +14,73 @@ indObjDataFormatter, maxIndustryWorth} from '../dataSorters';
 
 
 
-let data = billData
-let testData1 = sortByIndustry(billData)
-let testData2 = indObjDataFormatter(testData1)
-
-console.log('billData',billData)
-console.log('industries before conversion', sortByIndustry(billData))
-console.log('testData2', testData2)
-
-
-
 
 //Keep this it is necessary
-const allIndustries = ["Technology", "Automotive", 
-						"Fashion & Retail", "Finance & Investments", 
-						"Diversified", "Food & Beverage", 
-						"Telecom", "Media & Entertainment", 
-						"Service", "Gambling & Casinos", 
-						"Manufacturing", "Real Estate", "Metals & Mining", 
-						"Energy", "Logistics", "Healthcare", 
-						"Construction & Engineering"]
-
-
-// FUNCTION TO SCRAPE WEB AND GET BILLIONAIRE DATA
-// async function getData() {
-// 	const response = await fetch('https://www.forbes.com/billionaires/');
-// 	console.log('response', response)
-// }
-
-// getData()
-
-
+let country = ''
+let data = billData
+const allIndustries = getIndustries(billData)
 
 
 //this is how the map is generated
 
-const svg = d3.select('svg');
+const svg = d3.select('.map-svg');
 
 
 const projection = d3.geoNaturalEarth1();
 const pathGenerator = d3.geoPath().projection(projection);
+const g = svg.append('g')
 
-
-d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(data => {
+d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json').then(data => {
 	const countries = feature(data, data.objects.countries);
-	// console.log('countries',countries)
+	
+	svg.call(d3.zoom().on("zoom", (event) => {
+		console.log('zoooooooming')
+		g.attr('transform', event.transform)
+	}))
+	
+	
+	g.selectAll('path')
+	.data(countries.features)
+	.enter().append('path')
+	.attr('id', d => d.properties.name)
+	.attr('class', 'country')
+	.attr('d', pathGenerator)
+	.on('click', function(d,i){ 
+		let countryId = this.id;
+		displayCountry(countryId);
+		setGraph1(countryId);
+		setGraph2(countryId);
+	})
+	.append('title')
+	.text(d => d.properties.name)
 
-	console.log(data)
-	svg.selectAll('path')
-		.data(countries.features)
-		.enter().append('path')
-			.attr('id', d => d.properties.name)
-			.attr('class', 'country')
-			.attr('d', pathGenerator)
-			.on('click', function(d,i){ 
-				let countryId = this.id
-				setGraph1(countryId)
-				setGraph2(countryId)
-			})
-			.append('title')
-			.text(d => d.properties.name)
+	console.log('hitting')
+	
+	// svg.call(d3.zoom().on('zoom', () => {
+	// 	console.log('svg',svg)
+	// 	svg.attr('transform', d3.event.transform)
+	// }));
 			
 })
 
+// const displayCountry = (countryId) => {
+// 	console.log('hitting')
+// 	let header = document.getElementsByClassName('country-title');
+// 	console.log('header', header)
+// 	header.innerText = countryId
+// 	console.log(header.innerText)
+// }
+
+
+const displayCountry = (countryId) => {
+	console.log('hitting')
+	let h1 = document.createElement('div');
+	h1.textContent = countryId
+	h1.append('.country-title')
+}
+
 const setGraph1 = (countryId) => {
-	let data = []
-	if (countryId === 'Malaysia') {
-		data = filterByCountry(billData, countryId).concat(filterByCountry(billData, 'Singapore'))
-		console.log('malaysia', data)
-	} else if (countryId === 'China') {
-		data = filterByCountry(billData, countryId).concat(filterByCountry(billData, 'Hong Kong'))
-	} else {
-		data = filterByCountry(billData, countryId)
-	}	
+	let data = filterByCountry(billData, countryId)	
 	let circleEle = document.getElementsByClassName('billionaire-circle-packing')
 	let toolTip = document.getElementsByClassName('tooltip')
 	console.log('tooltip', circleEle)
@@ -101,6 +95,7 @@ const setGraph1 = (countryId) => {
 		billionaireBubbles(data)
 	}
 }
+
 
 
 
@@ -135,11 +130,12 @@ const billionaireBubbles = (data) => {
 		.append("div")
 		.style("opacity", 0)
 		.attr("class", "tooltip")
-		.style("background-color", "white")
-		.style("border", "solid")
+		.style("background-color", "lightblue")
+		.style("border", "none")
 		.style("border-width", "2px")
 		.style("border-radius", "5px")
-		.style("padding", "5px")
+		.style("padding", "10px")
+		
 	
 	const mouseover = function(event, d) {
 		Tooltip
@@ -148,9 +144,11 @@ const billionaireBubbles = (data) => {
 
 	const mousemove = function(event, d) {
 		Tooltip
-			.html('<u>' + d.name + ' - ' + d.source + '</u>' + "<br>" + d.netWorth + " billion dollars" + "<br>" + d.industry + " industry")
+			.html('<u>' + d.name + ' - ' + d.source + '</u>' + "<br>" + d.netWorth + " billion dollars" + "<br>" + d.industry + " industry" +
+			'<br>' + d.country)
 			.style("left", (event.x/2+20) + "px")
 			.style("top", (event.y/2-30) + "px")
+
 	}
 	
 	let mouseleave = function(event, d) {
@@ -159,6 +157,7 @@ const billionaireBubbles = (data) => {
 	}
 
 	let node = svg.append("g")
+	.attr('class', 'graph1-g')
     .selectAll("circle")
     .data(data)
     .join("circle")
@@ -183,6 +182,10 @@ const billionaireBubbles = (data) => {
 		   .force("charge", d3.forceManyBody().strength(.1)) // Nodes are attracted one each other of value is > 0
 		   .force("collide", d3.forceCollide().strength(.2).radius(function(d){ return (size(d.netWorth)+3) }).iterations(1)) // Force that avoids circle overlapping
 	 
+
+		svg.call(d3.zoom().on("zoom", (event) => {
+			node.attr('transform', event.transform)
+		}))
 	   // Apply these forces to the nodes and update their positions.
 	   // Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
 	   simulation
@@ -208,6 +211,8 @@ const billionaireBubbles = (data) => {
 		 d.fx = null;
 		 d.fy = null;
 	   }
+
+	   
 }
 
 // billionaireBubbles(billData)
@@ -292,21 +297,13 @@ const industryBarGraph = (industryData) => {
 
 const setGraph2 = (countryId) => {
 	let data = []
-	if (countryId === 'Malaysia'){
-		data = filterByCountry(billData, countryId).concat(filterByCountry(billData, 'Singapore'))
-		data = sortByIndustry(data)
-		data = indObjDataFormatter(data)
-
-	} else if(countryId === 'China') {
-		data = filterByCountry(billData, countryId).concat(filterByCountry(billData, 'Hong Kong'))
-		data = sortByIndustry(data)
-		data = indObjDataFormatter(data)
-	} else {
-		data = filterByCountry(billData, countryId)
-		data = sortByIndustry(data)
-		data = indObjDataFormatter(data)
+	country = countryId
+	
+	data = filterByCountry(billData, countryId)
+	data = sortByIndustry(data)
+	data = indObjDataFormatter(data)
 		
-	}
+
 	let barEle = document.getElementsByClassName('bar-graph-svg')
 	if(barEle.length !== 0) {
 		barEle[0].parentNode.removeChild(barEle[0])
@@ -316,7 +313,7 @@ const setGraph2 = (countryId) => {
 		industryBarGraph(data)
 	}
 	
-
+	console.log(country)
 }
 // setGraph2('Brazil')
 
