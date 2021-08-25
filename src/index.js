@@ -16,6 +16,7 @@ indObjDataFormatter, maxIndustryWorth} from '../dataSorters';
 
 
 //Keep this it is necessary
+let country = ''
 let data = billData
 const allIndustries = getIndustries(billData)
 
@@ -98,6 +99,7 @@ const setGraph1 = (countryId) => {
 
 
 
+
 //Graph that returns circle packing graph of billionaire's wealth sizes
 //takes in an array of objects containing json formatted objects 
 // ex. {"id": 2, "name": "Elon Musk",
@@ -142,9 +144,11 @@ const billionaireBubbles = (data) => {
 
 	const mousemove = function(event, d) {
 		Tooltip
-			.html('<u>' + d.name + ' - ' + d.source + '</u>' + "<br>" + d.netWorth + " billion dollars" + "<br>" + d.industry + " industry")
+			.html('<u>' + d.name + ' - ' + d.source + '</u>' + "<br>" + d.netWorth + " billion dollars" + "<br>" + d.industry + " industry" +
+			'<br>' + d.country)
 			.style("left", (event.x/2+20) + "px")
 			.style("top", (event.y/2-30) + "px")
+
 	}
 	
 	let mouseleave = function(event, d) {
@@ -293,6 +297,7 @@ const industryBarGraph = (industryData) => {
 
 const setGraph2 = (countryId) => {
 	let data = []
+	country = countryId
 	
 	data = filterByCountry(billData, countryId)
 	data = sortByIndustry(data)
@@ -308,7 +313,7 @@ const setGraph2 = (countryId) => {
 		industryBarGraph(data)
 	}
 	
-
+	console.log(country)
 }
 // setGraph2('Brazil')
 
