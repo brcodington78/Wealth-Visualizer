@@ -34,7 +34,7 @@ d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json').then(da
 	const countries = feature(data, data.objects.countries);
 	
 	svg.call(d3.zoom().on("zoom", (event) => {
-		console.log('zoooooooming')
+		
 		g.attr('transform', event.transform)
 	}))
 	
@@ -47,43 +47,28 @@ d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json').then(da
 	.attr('d', pathGenerator)
 	.on('click', function(d,i){ 
 		let countryId = this.id;
-		displayCountry(countryId);
+		// displayCountry(countryId);
 		setGraph1(countryId);
 		setGraph2(countryId);
 	})
 	.append('title')
 	.text(d => d.properties.name)
 
-	console.log('hitting')
-	
-	// svg.call(d3.zoom().on('zoom', () => {
-	// 	console.log('svg',svg)
-	// 	svg.attr('transform', d3.event.transform)
-	// }));
 			
 })
 
-// const displayCountry = (countryId) => {
-// 	console.log('hitting')
-// 	let header = document.getElementsByClassName('country-title');
-// 	console.log('header', header)
-// 	header.innerText = countryId
-// 	console.log(header.innerText)
-// }
 
+const setGraph1 = (countryId = null) => {
+	let data = {}
+	if (countryId) {
+		data = filterByCountry(billData, countryId)	
 
-const displayCountry = (countryId) => {
-	console.log('hitting')
-	let h1 = document.createElement('div');
-	h1.textContent = countryId
-	h1.append('.country-title')
-}
-
-const setGraph1 = (countryId) => {
-	let data = filterByCountry(billData, countryId)	
+	} else {
+		data = billData
+	}
 	let circleEle = document.getElementsByClassName('billionaire-circle-packing')
 	let toolTip = document.getElementsByClassName('tooltip')
-	console.log('tooltip', circleEle)
+
 	if(circleEle.length !== 0) {
 		circleEle[0].parentNode.removeChild(circleEle[0])
 		toolTip[0].parentNode.removeChild(toolTip[0])
@@ -259,9 +244,9 @@ const industryBarGraph = (industryData) => {
 		.style("text-anchor", "end");
 
 	// Add Y axis
-	console.log('industry d', data)
+
 	let maxIndustryValue = Math.floor(maxIndustryWorth(data)) + 200
-	console.log('max', maxIndustryValue)
+	
 
 
 	const y = d3.scaleLinear()
@@ -289,17 +274,21 @@ const industryBarGraph = (industryData) => {
 	.duration(800)
 	.attr("y", d => y(d.totalWorth))
 	.attr("height", d => height - y(d.totalWorth))
-	.delay((d,i) => {console.log(i); return i*100})
+	.delay((d,i) => {return i*100})
 	
 
 	
 }
 
-const setGraph2 = (countryId) => {
+const setGraph2 = (countryId = null) => {
 	let data = []
 	country = countryId
 	
-	data = filterByCountry(billData, countryId)
+	if (countryId) {
+		data = filterByCountry(billData, countryId)
+	} else {
+		data = billData
+	}
 	data = sortByIndustry(data)
 	data = indObjDataFormatter(data)
 		
@@ -313,10 +302,14 @@ const setGraph2 = (countryId) => {
 		industryBarGraph(data)
 	}
 	
-	console.log(country)
 }
-// setGraph2('Brazil')
+
+const renderGraphs = () => {
+	setGraph1()
+	setGraph2()
+}
 
 
-// industryBarGraph(testData2)
+// let theWorld = document.getElementById('globe-svg')
 
+// theWorld.addEventListener("click", renderGraphs())

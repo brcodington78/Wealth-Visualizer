@@ -40,9 +40,7 @@
 
 	
 // 	let mousemove = function(event, d) {
-// 		console.log('event', event)
-// 		console.log('mousemove hitting')
-// 		console.log('mousemove d', d)
+// 	
 // 		const [x, y] = d3.pointer(event);
 // 		Tooltip
 // 		  	.html('<u>' + d.industry + '</u>' + "<br>" + `${d.totalWorth}` + " dollars in billions" )

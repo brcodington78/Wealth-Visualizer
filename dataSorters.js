@@ -10,7 +10,7 @@ export const sortByCountry = (data, countryString) => {
             sortedData.push(object)
         }
     })
-    console.log(sortedData)
+
     return sortedData
 }
 
@@ -87,7 +87,7 @@ export const netWorthByCountry = (data) => {
 
     data.forEach((object) => {
         let personalCountry = object.country;
-        console.log('networth', object.netWorth)
+
         countriesObj[personalCountry] += object.netWorth
     })
 
