@@ -20,6 +20,8 @@ const MIN_ROWS = 500;
 // Names that differ between the data source and the world-atlas map
 const COUNTRY_ALIASES = {
   "United States": "United States of America",
+  "Czech Republic": "Czechia",
+  "Eswatini (Swaziland)": "eSwatini",
 };
 
 const ageFromBirthDate = (birthDate) => {

@@ -51,15 +51,51 @@ d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json").then(
       .attr("class", "country")
       .attr("d", pathGenerator)
       .on("click", function (d, i) {
-        let countryId = this.id;
-        // displayCountry(countryId);
-        setGraph1(countryId);
-        setGraph2(countryId);
+        showCountry(this.id);
       })
       .append("title")
       .text((d) => d.properties.name);
+
+    shadeCountries();
   }
 );
+
+//grays out countries with no billionaires; runs after whichever of the map or data loads last
+const shadeCountries = () => {
+  if (billData.length === 0) return;
+  const countriesWithData = new Set(billData.map((d) => d.country.toLowerCase()));
+  g.selectAll("path.country").classed(
+    "no-data",
+    function () {
+      return !countriesWithData.has(this.id.toLowerCase());
+    }
+  );
+};
+
+//shows the graphs for one country (or every country when countryId is null),
+//or a message instead when that country has no billionaires
+const showCountry = (countryId = null) => {
+  if (billData.length === 0) return;
+
+  const people = countryId ? filterByCountry(billData, countryId) : billData;
+  const isEmpty = people.length === 0;
+  const label = countryId || "All countries";
+
+  document.querySelector(".country-title").textContent = isEmpty
+    ? label
+    : `${label} · ${people.length.toLocaleString()} billionaires`;
+  document.querySelector(".graph-container").hidden = isEmpty;
+  document.querySelector(".empty-state").hidden = !isEmpty;
+
+  if (isEmpty) {
+    document.querySelector(".empty-state-text").textContent =
+      `${countryId} has no billionaires on the Forbes list.`;
+    return;
+  }
+
+  setGraph1(countryId);
+  setGraph2(countryId);
+};
 
 const setGraph1 = (countryId = null) => {
   let data = {};
@@ -334,6 +370,9 @@ const setGraph2 = (countryId = null) => {
   data = sortByIndustry(data);
   data = indObjDataFormatter(data);
 
+  //the caption stays hidden until there's a graph for it to describe
+  document.querySelector(".industry-graph-caption").hidden = false;
+
   let barEle = document.getElementsByClassName("bar-graph-svg");
   if (barEle.length !== 0) {
     barEle[0].parentNode.removeChild(barEle[0]);
@@ -344,9 +383,7 @@ const setGraph2 = (countryId = null) => {
 };
 
 const renderGraphs = () => {
-  setGraph1();
-  setGraph2();
-  console.log("hitting");
+  showCountry(null);
 };
 
 let theWorld = document.getElementById("globe-svg");
@@ -368,5 +405,10 @@ d3.json("./data/billionaires.json")
     document
       .querySelector(".show-all-btn")
       .addEventListener("click", renderGraphs);
+    document
+      .querySelector(".empty-state-btn")
+      .addEventListener("click", renderGraphs);
+
+    shadeCountries();
   })
   .catch((err) => console.error("Could not load billionaire data", err));
