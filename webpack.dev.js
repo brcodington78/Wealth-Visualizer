@@ -6,8 +6,11 @@ module.exports = merge(common, {
   mode: "development",
   devtool: "inline-source-map",
   devServer: {
-    contentBase: "./",
-    watchContentBase: true,
+    static: {
+      directory: __dirname,
+      // watch index.html and data/, but not the thousands of files in node_modules
+      watch: { ignored: /node_modules|\.git/ },
+    },
     open: true, // use "chrome" for PC
   },
 });

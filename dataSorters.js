@@ -1,4 +1,3 @@
-import {billData} from './billionaireData';
 import * as d3 from 'd3'
 
 

@@ -6,7 +6,6 @@ import { grabBillions } from "../scraper";
 // import * as topojson from 'topojson-client';
 import { feature } from "topojson-client";
 import "./styles/main.scss";
-import { billData } from "../billionaireData";
 import { sortByCountry } from "../dataSorters";
 import {
   getIndustries,
@@ -22,8 +21,9 @@ import {
 
 //Keep this it is necessary
 let country = "";
-let data = billData;
-const allIndustries = getIndustries(billData);
+//filled in once data/billionaires.json loads (kept fresh by a scheduled GitHub Action)
+let billData = [];
+let allIndustries = [];
 
 //this is how the map is generated
 
@@ -94,8 +94,8 @@ const billionaireBubbles = (data) => {
     .select(".billionaire-circle-container")
     .append("svg")
     .attr("class", "billionaire-circle-packing")
-    .attr("width", height)
-    .attr("height", height)
+    //viewBox lets the chart shrink to fit narrow screens
+    .attr("viewBox", `0 0 ${width} ${height}`)
     .style("background-color", "lightblue")
     .style("border-radius", 50 + "%");
 
@@ -111,7 +111,11 @@ const billionaireBubbles = (data) => {
         .reverse()
     );
 
-  const size = d3.scaleLinear().domain([0, 190]).range([10, 60]);
+  //scale to the richest person in the full list so bubbles stay comparable across countries
+  const size = d3
+    .scaleLinear()
+    .domain([0, d3.max(billData, (d) => d.netWorth)])
+    .range([10, 60]);
 
   const Tooltip = d3
     .select(".billionaire-circle-container")
@@ -126,6 +130,12 @@ const billionaireBubbles = (data) => {
 
   const mouseover = function (event, d) {
     Tooltip.style("opacity", 1);
+  };
+
+  //phones have no hover, so tapping a bubble shows its info card instead
+  const tap = function (event, d) {
+    Tooltip.style("opacity", 1);
+    mousemove(event, d);
   };
 
   const mousemove = function (event, d) {
@@ -169,6 +179,7 @@ const billionaireBubbles = (data) => {
     .on("mouseover", mouseover) // What to do when hovered
     .on("mousemove", mousemove)
     .on("mouseleave", mouseleave)
+    .on("click", tap)
     .call(
       d3
         .drag() // call specific function when circle is dragged
@@ -241,8 +252,10 @@ const industryBarGraph = (industryData) => {
   const svg = d3
     .select(".industry-bar-graph")
     .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+    .attr(
+      "viewBox",
+      `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`
+    )
     .attr("class", "bar-graph-svg")
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -337,6 +350,23 @@ const renderGraphs = () => {
 };
 
 let theWorld = document.getElementById("globe-svg");
-console.log("the world", theWorld);
 
-theWorld.addEventListener("click", renderGraphs);
+d3.json("./data/billionaires.json")
+  .then((json) => {
+    billData = json.billionaires;
+    allIndustries = getIndustries(billData);
+
+    const updated = new Date(json.updatedAt).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    document.querySelector(".last-updated").textContent =
+      `Data last updated ${updated}.`;
+    theWorld.addEventListener("click", renderGraphs);
+    //on phones the globe icon is hidden and this button takes its place
+    document
+      .querySelector(".show-all-btn")
+      .addEventListener("click", renderGraphs);
+  })
+  .catch((err) => console.error("Could not load billionaire data", err));
